@@ -3,13 +3,14 @@ package main
 import (
 	"bytes"
 	"errors"
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
-	"git.curoverse.com/arvados.git/sdk/go/keepclient"
-	. "gopkg.in/check.v1"
 	"io"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/keepclient"
+	. "gopkg.in/check.v1"
 )
 
 type PullWorkerTestSuite struct{}

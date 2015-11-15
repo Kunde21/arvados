@@ -3,14 +3,15 @@ package main
 import (
 	"bytes"
 	"errors"
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
-	"git.curoverse.com/arvados.git/sdk/go/arvadostest"
-	"git.curoverse.com/arvados.git/sdk/go/keepclient"
 	"io"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/arvadostest"
+	"github.com/Kunde21/arvados/sdk/go/keepclient"
 )
 
 var keepClient *keepclient.KeepClient

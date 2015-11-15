@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
 )
 
 func ExampleRefreshServices() {

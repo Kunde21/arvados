@@ -4,11 +4,12 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/keepclient"
 	"io"
 	"io/ioutil"
 	"log"
 	"time"
+
+	"github.com/Kunde21/arvados/sdk/go/keepclient"
 )
 
 // RunPullWorker is used by Keepstore to initiate pull worker channel goroutine.
@@ -95,6 +96,6 @@ func GenerateRandomAPIToken() string {
 
 // Put block
 var PutContent = func(content []byte, locator string) (err error) {
-	_, err = PutBlock(content, locator)
+	_, _, err = PutBlock(content)
 	return
 }

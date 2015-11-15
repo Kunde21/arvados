@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"git.curoverse.com/arvados.git/sdk/go/manifest"
+	"github.com/Kunde21/arvados/sdk/go/manifest"
 )
 
 // ReadCloserWithLen extends io.ReadCloser with a Len() method that

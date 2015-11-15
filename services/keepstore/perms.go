@@ -1,8 +1,9 @@
 package main
 
 import (
-	"git.curoverse.com/arvados.git/sdk/go/keepclient"
 	"time"
+
+	"github.com/Kunde21/arvados/sdk/go/keepclient"
 )
 
 // The PermissionSecret is the secret key used to generate SHA1

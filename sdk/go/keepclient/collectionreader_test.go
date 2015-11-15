@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
-	"git.curoverse.com/arvados.git/sdk/go/arvadostest"
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/arvadostest"
 	check "gopkg.in/check.v1"
 )
 

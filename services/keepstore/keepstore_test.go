@@ -126,7 +126,7 @@ func TestPutBlockOK(t *testing.T) {
 	defer KeepVM.Close()
 
 	// Check that PutBlock stores the data as expected.
-	if n, err := PutBlock(TestBlock, TestHash); err != nil || n < 1 {
+	if hash, n, err := PutBlock(TestBlock); err != nil || n < 1 || hash != TestHash {
 		t.Fatalf("PutBlock: n %d err %v", n, err)
 	}
 
@@ -156,7 +156,7 @@ func TestPutBlockOneVol(t *testing.T) {
 	vols[0].(*MockVolume).Bad = true
 
 	// Check that PutBlock stores the data as expected.
-	if n, err := PutBlock(TestBlock, TestHash); err != nil || n < 1 {
+	if hash, n, err := PutBlock(TestBlock); err != nil || n < 1 || hash != TestHash {
 		t.Fatalf("PutBlock: n %d err %v", n, err)
 	}
 
@@ -174,7 +174,7 @@ func TestPutBlockOneVol(t *testing.T) {
 // TestPutBlockMD5Fail
 //     Check that PutBlock returns an error if passed a block and hash that
 //     do not match.
-//
+/*/
 func TestPutBlockMD5Fail(t *testing.T) {
 	defer teardown()
 
@@ -184,7 +184,7 @@ func TestPutBlockMD5Fail(t *testing.T) {
 
 	// Check that PutBlock returns the expected error when the hash does
 	// not match the block.
-	if _, err := PutBlock(BadBlock, TestHash); err != RequestHashError {
+	if hash, _, err := PutBlock(BadBlock); err != RequestHashError {
 		t.Errorf("Expected RequestHashError, got %v", err)
 	}
 
@@ -193,7 +193,7 @@ func TestPutBlockMD5Fail(t *testing.T) {
 		t.Errorf("GetBlock succeeded after a corrupt block store (result = %s, err = %v)",
 			string(result), err)
 	}
-}
+}*/
 
 // TestPutBlockCorrupt
 //     PutBlock should overwrite corrupt blocks on disk when given
@@ -209,7 +209,7 @@ func TestPutBlockCorrupt(t *testing.T) {
 	// Store a corrupted block under TestHash.
 	vols := KeepVM.AllWritable()
 	vols[0].Put(TestHash, BadBlock)
-	if n, err := PutBlock(TestBlock, TestHash); err != nil || n < 1 {
+	if hash, n, err := PutBlock(TestBlock); err != nil || n < 1 || hash != TestHash {
 		t.Errorf("PutBlock: n %d err %v", n, err)
 	}
 
@@ -231,7 +231,7 @@ func TestPutBlockCollision(t *testing.T) {
 	// These blocks both hash to the MD5 digest cee9a457e790cf20d4bdaa6d69f01e41.
 	var b1 = []byte("\x0e0eaU\x9a\xa7\x87\xd0\x0b\xc6\xf7\x0b\xbd\xfe4\x04\xcf\x03e\x9epO\x854\xc0\x0f\xfbe\x9cL\x87@\xcc\x94/\xeb-\xa1\x15\xa3\xf4\x15\\\xbb\x86\x07Is\x86em}\x1f4\xa4 Y\xd7\x8fZ\x8d\xd1\xef")
 	var b2 = []byte("\x0e0eaU\x9a\xa7\x87\xd0\x0b\xc6\xf7\x0b\xbd\xfe4\x04\xcf\x03e\x9etO\x854\xc0\x0f\xfbe\x9cL\x87@\xcc\x94/\xeb-\xa1\x15\xa3\xf4\x15\xdc\xbb\x86\x07Is\x86em}\x1f4\xa4 Y\xd7\x8fZ\x8d\xd1\xef")
-	var locator = "cee9a457e790cf20d4bdaa6d69f01e41"
+	//var locator = "cee9a457e790cf20d4bdaa6d69f01e41"
 
 	// Prepare two test Keep volumes.
 	KeepVM = MakeTestVolumeManager(2)
@@ -239,10 +239,10 @@ func TestPutBlockCollision(t *testing.T) {
 
 	// Store one block, then attempt to store the other. Confirm that
 	// PutBlock reported a CollisionError.
-	if _, err := PutBlock(b1, locator); err != nil {
+	if _, _, err := PutBlock(b1); err != nil {
 		t.Error(err)
 	}
-	if _, err := PutBlock(b2, locator); err == nil {
+	if _, _, err := PutBlock(b2); err == nil {
 		t.Error("PutBlock did not report a collision")
 	} else if err != CollisionError {
 		t.Errorf("PutBlock returned %v", err)
@@ -273,7 +273,7 @@ func TestPutBlockTouchFails(t *testing.T) {
 	// vols[0].Touch will fail on the next call, so the volume
 	// manager will store a copy on vols[1] instead.
 	vols[0].(*MockVolume).Touchable = false
-	if n, err := PutBlock(TestBlock, TestHash); err != nil || n < 1 {
+	if hash, n, err := PutBlock(TestBlock); err != nil || n < 1 || hash != TestHash {
 		t.Fatalf("PutBlock: n %d err %v", n, err)
 	}
 	vols[0].(*MockVolume).Touchable = true

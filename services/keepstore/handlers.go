@@ -12,7 +12,6 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io"
 	"log"
 	"net/http"
@@ -22,6 +21,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 // MakeRESTRouter returns a new mux.Router that forwards all Keep
@@ -36,7 +37,8 @@ func MakeRESTRouter() *mux.Router {
 		`/{hash:[0-9a-f]{32}}+{hints}`,
 		GetBlockHandler).Methods("GET", "HEAD")
 
-	rest.HandleFunc(`/{hash:[0-9a-f]{32}}`, PutBlockHandler).Methods("PUT")
+	//rest.HandleFunc(`/{hash:[0-9a-f]{32}}`, PutBlockHandler).Methods("PUT")
+	rest.HandleFunc(`/insert`, PutBlockHandler).Methods("PUT")
 	rest.HandleFunc(`/{hash:[0-9a-f]{32}}`, DeleteHandler).Methods("DELETE")
 	// List all blocks stored here. Privileged client only.
 	rest.HandleFunc(`/index`, IndexHandler).Methods("GET", "HEAD")
@@ -91,7 +93,7 @@ func GetBlockHandler(resp http.ResponseWriter, req *http.Request) {
 
 // PutBlockHandler is a HandleFunc to address Put block requests.
 func PutBlockHandler(resp http.ResponseWriter, req *http.Request) {
-	hash := mux.Vars(req)["hash"]
+	//hash := mux.Vars(req)["hash"]
 
 	// Detect as many error conditions as possible before reading
 	// the body: avoid transmitting data that will not end up
@@ -120,7 +122,8 @@ func PutBlockHandler(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	replication, err := PutBlock(buf, hash)
+	//replication, err := PutBlock(buf, hash)
+	hash, replication, err := PutBlock(buf)
 	bufs.Put(buf)
 
 	if err != nil {
@@ -518,40 +521,41 @@ func GetBlock(hash string) ([]byte, error) {
 //          all writes failed). The text of the error message should
 //          provide as much detail as possible.
 //
-func PutBlock(block []byte, hash string) (int, error) {
+func PutBlock(block []byte /*, hash string*/) (string, int, error) {
 	// Check that BLOCK's checksum matches HASH.
-	blockhash := fmt.Sprintf("%x", md5.Sum(block))
+	hash := fmt.Sprintf("%x", md5.Sum(block))
+	/*blockhash := fmt.Sprintf("%x", md5.Sum(block))
 	if blockhash != hash {
 		log.Printf("%s: MD5 checksum %s did not match request", hash, blockhash)
 		return 0, RequestHashError
-	}
+	}*/
 
 	// If we already have this data, it's intact on disk, and we
 	// can update its timestamp, return success. If we have
 	// different data with the same hash, return failure.
 	if n, err := CompareAndTouch(hash, block); err == nil || err == CollisionError {
-		return n, err
+		return hash, n, err
 	}
 
 	// Choose a Keep volume to write to.
 	// If this volume fails, try all of the volumes in order.
 	if vol := KeepVM.NextWritable(); vol != nil {
 		if err := vol.Put(hash, block); err == nil {
-			return vol.Replication(), nil // success!
+			return hash, vol.Replication(), nil // success!
 		}
 	}
 
 	writables := KeepVM.AllWritable()
 	if len(writables) == 0 {
 		log.Print("No writable volumes.")
-		return 0, FullError
+		return hash, 0, FullError
 	}
 
 	allFull := true
 	for _, vol := range writables {
 		err := vol.Put(hash, block)
 		if err == nil {
-			return vol.Replication(), nil // success!
+			return hash, vol.Replication(), nil // success!
 		}
 		if err != FullError {
 			// The volume is not full but the
@@ -564,10 +568,10 @@ func PutBlock(block []byte, hash string) (int, error) {
 
 	if allFull {
 		log.Print("All volumes are full.")
-		return 0, FullError
+		return hash, 0, FullError
 	}
 	// Already logged the non-full errors.
-	return 0, GenericError
+	return hash, 0, GenericError
 }
 
 // CompareAndTouch returns the current replication level if one of the

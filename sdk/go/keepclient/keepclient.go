@@ -7,8 +7,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
-	"git.curoverse.com/arvados.git/sdk/go/streamer"
 	"io"
 	"io/ioutil"
 	"log"
@@ -17,6 +15,9 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/streamer"
 )
 
 // A Keep "block" is 64MB.

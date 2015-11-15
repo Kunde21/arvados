@@ -1,9 +1,10 @@
 package main
 
 import (
-	. "gopkg.in/check.v1"
 	"testing"
 	"time"
+
+	. "gopkg.in/check.v1"
 )
 
 // Gocheck boilerplate

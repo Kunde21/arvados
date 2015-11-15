@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/streamer"
 	"io"
 	"io/ioutil"
 	"log"
@@ -13,6 +12,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Kunde21/arvados/sdk/go/streamer"
 )
 
 // Function used to emit debug messages. The easiest way to enable

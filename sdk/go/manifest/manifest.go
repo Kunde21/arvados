@@ -7,11 +7,12 @@ package manifest
 import (
 	"errors"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/blockdigest"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/Kunde21/arvados/sdk/go/blockdigest"
 )
 
 var ErrInvalidToken = errors.New("Invalid token")

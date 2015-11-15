@@ -4,10 +4,6 @@ import (
 	"crypto/md5"
 	"flag"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/arvadosclient"
-	"git.curoverse.com/arvados.git/sdk/go/arvadostest"
-	"git.curoverse.com/arvados.git/sdk/go/streamer"
-	. "gopkg.in/check.v1"
 	"io"
 	"io/ioutil"
 	"log"
@@ -16,6 +12,11 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/Kunde21/arvados/sdk/go/arvadosclient"
+	"github.com/Kunde21/arvados/sdk/go/arvadostest"
+	"github.com/Kunde21/arvados/sdk/go/streamer"
+	. "gopkg.in/check.v1"
 )
 
 // Gocheck boilerplate

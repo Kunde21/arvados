@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"git.curoverse.com/arvados.git/sdk/go/keepclient"
 	"io/ioutil"
 	"log"
 	"net"
@@ -14,6 +13,8 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/Kunde21/arvados/sdk/go/keepclient"
 )
 
 // ======================
@@ -150,7 +151,7 @@ func main() {
 		&listen,
 		"listen",
 		DefaultAddr,
-		"Listening address, in the form \"host:port\". e.g., 10.0.1.24:8000. Omit the host part to listen on all interfaces.")
+		"Listening address, in the form \"host:port\". e.g., 1.0.1.24:8000. Omit the host part to listen on all interfaces.")
 	flag.BoolVar(
 		&neverDelete,
 		"never-delete",
@@ -208,7 +209,7 @@ func main() {
 	}
 	bufs = newBufferPool(maxBuffers, BlockSize)
 
-	if pidfile != "" {
+	/*if pidfile != "" {
 		f, err := os.OpenFile(pidfile, os.O_RDWR|os.O_CREATE, 0777)
 		if err != nil {
 			log.Fatalf("open pidfile (%s): %s", pidfile, err)
@@ -231,7 +232,7 @@ func main() {
 		}
 		defer f.Close()
 		defer os.Remove(pidfile)
-	}
+	}*/
 
 	if len(volumes) == 0 {
 		if (&unixVolumeAdder{&volumes}).Discover() == 0 {

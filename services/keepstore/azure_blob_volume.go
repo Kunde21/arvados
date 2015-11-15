@@ -317,6 +317,7 @@ func (v *AzureBlobVolume) translateError(err error) error {
 }
 
 var keepBlockRegexp = regexp.MustCompile(`^[0-9a-f]{32}$`)
+
 func (v *AzureBlobVolume) isKeepBlock(s string) bool {
 	return keepBlockRegexp.MatchString(s)
 }
